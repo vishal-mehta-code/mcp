@@ -14,9 +14,13 @@ public class McpSseClient {
         this.webClient = webClientBuilder.baseUrl("http://remote-mcp-server:8080").build();
     }
 
-    public Flux<String> subscribeToEvents() {
+    // Java
+    public Flux<String> subscribeToEvents(String prompt) {
         return webClient.get()
-                .uri("/sse")
+                .uri(uriBuilder -> uriBuilder
+                        .path("/sse")
+                        .queryParam("prompt", prompt)
+                        .build())
                 .retrieve()
                 .bodyToFlux(String.class)
                 .doOnNext(event -> {
